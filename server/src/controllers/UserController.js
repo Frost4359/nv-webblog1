@@ -1,33 +1,34 @@
-const {User} = require('../models')
+const { User } = require('../models')
+const isAuthenController = require('./authen/isAuthenController')
 
 module.exports = {
     // get all user
-    async index (req, res) {
+    async index(req, res) {
         try {
             const users = await User.findAll()
             res.send(users)
-        } catch (err){
+        } catch (err) {
             res.status(500).send({
                 error: 'The users information was incorrect'
             })
         }
-        
+
     },
-    
+
     // create user 
-    async create (req, res) {
-      try{
-        const user = await User.create(req.boy)
-        res.send(user.toJSON())
-      }  catch (err) {
-        res.status(500).send({
-            error: 'Create user incorrect'
-        })
-      }
+    async create(req, res) {
+        try {
+            const user = await User.create(req.body)
+            res.send(user.toJSON())
+        } catch (err) {
+            res.status(500).send({
+                error: 'Create user incorrect'
+            })
+        }
     },
 
     // edit user, suspend, active
-    async put (req, res) {
+    async put(req, res) {
         try {
             await User.update(req.body, {
                 where: {
@@ -43,7 +44,7 @@ module.exports = {
     },
 
     // delete user
-    async remove (req, res) {
+    async remove(req, res) {
         try {
             const user = await User.findOne({
                 where: {
@@ -51,7 +52,7 @@ module.exports = {
                 }
             })
 
-            if(!user){
+            if (!user) {
                 return res.status(403).send({
                     error: 'The user information ws incorrect'
                 })
@@ -60,22 +61,23 @@ module.exports = {
             await user.destroy()
             res.send(user)
         } catch (err) {
-            res.status(500).send({
+            res.status(50).send({
                 error: 'The user information was incorrect'
             })
         }
     },
 
     // get user by id
-    async show (req, res) {
+    async show(req, res) {
         try {
-            const user = await User.findById(req.params.userId)
+            console.log(req.params.userId)
+            const user = await User.findByPk(req.params.userId)
             res.send(user)
         } catch (err) {
-            req.status(500).send({
+            res.status(500).send({
                 error: 'The user information was incorrect'
             })
         }
-        
+
     },
 }
